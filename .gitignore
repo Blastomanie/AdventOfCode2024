@@ -1,0 +1,5 @@
+.vscode/
+*.txt
+*.code-workspace
+*.exe
+/build
