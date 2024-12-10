@@ -67,6 +67,28 @@ namespace aoc {
         return output;
     }
 
+    template <typename T1, typename T2>
+    std::pair<std::vector<T1>, std::vector<T2>> parseInput(std::string inputName, void (*func)(std::string, std::pair<std::vector<T1>, std::vector<T2>>&), bool firstPart = true) {
+        std::fstream input;
+        input.open(inputName + ".txt", std::ios::in);
+        std::pair<std::vector<T1>, std::vector<T2>> output;
+        std::string line;
+        if (input.is_open()) {
+            while (std::getline(input, line)) {
+                if (firstPart) {
+                    if (line.empty()) break;
+                    if (firstPart) func(line, output);
+                } else {
+                    if (firstPart) func(line, output);
+                    if (line.empty()) firstPart = !firstPart;
+                }
+
+            }
+        }
+        input.close();
+        return output;
+    }
+
     template <typename T, typename... Args>
     void showResult(T (*part)(Args...), int num, Args... args) {
         auto start = std::chrono::high_resolution_clock::now();
@@ -117,6 +139,28 @@ namespace aoc {
         }
         out.pop_back();
         std::cout << out << std::endl;
+    }
+
+    template <typename T>
+    T sumv(std::vector<T> vec) {
+        T sum = 0;
+        for (int64_t val : vec) {
+            sum += val;
+        }
+        return sum;
+    }
+
+    template <typename T>
+    void printm(std::vector<std::vector<T>> matrix) {
+        std::string out = "matrix : \n";
+        for (std::vector<T> row : matrix) {
+            for (T elem : row) {
+                out += std::to_string(elem) + ",";
+            }
+            out.pop_back();
+            out += "\n";
+        }
+        std::cout << out;
     }
 
 }

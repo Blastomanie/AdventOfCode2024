@@ -1,5 +1,5 @@
 .vscode/
-*.txt
+/days/*/*.txt
 *.code-workspace
 *.exe
 /build
