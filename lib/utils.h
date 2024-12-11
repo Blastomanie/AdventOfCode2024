@@ -45,11 +45,54 @@ namespace aoc {
         return output;
     }
 
+    template <typename T>
+    std::vector<T> parseInput(std::string inputName, void (*func)(std::string, std::vector<T>&), bool firstPart = true) {
+        std::fstream input;
+        input.open(inputName + ".txt", std::ios::in);
+        std::vector<T> output;
+        std::string line;
+        if (input.is_open()) {
+            while (std::getline(input, line)) {
+                if (firstPart) {
+                    if (line.empty()) break;
+                    func(line, output);
+                } else {
+                    if (firstPart) func(line, output);
+                    if (line.empty()) firstPart = !firstPart;
+                }
+            }
+        }
+        input.close();
+        return output;
+    }
+
     template <typename T1, typename T2>
     std::map<T1, std::vector<T2>> parseInput(std::string inputName, void (*func)(std::string, std::map<T1, std::vector<T2>>&), bool firstPart = true) {
         std::fstream input;
         input.open(inputName + ".txt", std::ios::in);
         std::map<T1, std::vector<T2>> output;
+        std::string line;
+        if (input.is_open()) {
+            while (std::getline(input, line)) {
+                if (firstPart) {
+                    if (line.empty()) break;
+                    if (firstPart) func(line, output);
+                } else {
+                    if (firstPart) func(line, output);
+                    if (line.empty()) firstPart = !firstPart;
+                }
+
+            }
+        }
+        input.close();
+        return output;
+    }
+
+    template <typename T1, typename T2>
+    std::map<T1, T2> parseInput(std::string inputName, void (*func)(std::string, std::map<T1, T2>&), bool firstPart = true) {
+        std::fstream input;
+        input.open(inputName + ".txt", std::ios::in);
+        std::map<T1, T2> output;
         std::string line;
         if (input.is_open()) {
             while (std::getline(input, line)) {
@@ -95,7 +138,14 @@ namespace aoc {
         std::cout << "==============================================================" << std::endl;
         std::cout << "The solution of part "<< num << " is : " << part(args...) << std::endl;
         auto stop = std::chrono::high_resolution_clock::now();
-        std::cout << "Time taken: " << std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count() << " ms" << std::endl;
+        auto time = std::chrono::duration_cast<std::chrono::microseconds>(stop - start).count();
+        if (time < 1000) {
+            std::cout << "Time taken: " << time << " µs" << std::endl;
+        } else if (time < 1000000) {
+            std::cout << "Time taken: " << time / 1000 << "." << time % 1000 << " ms" << std::endl;
+        } else {
+            std::cout << "Time taken: " << time / 1000000 << "." << time % 1000000 << " s" << std::endl;
+        }
         std::cout << "==============================================================" << std::endl;
     }
 
