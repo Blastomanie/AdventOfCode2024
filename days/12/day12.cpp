@@ -11,7 +11,6 @@ std::string parse(std::string line) {
 
 // PART 1
 
-std::pair<std::vector<int>, int> test;
 std::vector<std::pair<int, int>> directions{
     {-1, 0},
     {1, 0},

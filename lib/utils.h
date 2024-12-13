@@ -46,6 +46,28 @@ namespace aoc {
     }
 
     template <typename T>
+    std::vector<T> parseInput(std::string inputName, T (*func)(std::vector<std::string>), int numberElem = 1) {
+        std::fstream input;
+        input.open(inputName + ".txt", std::ios::in);
+        std::vector<T> output;
+        std::vector<std::string> elems;
+        elems.reserve(numberElem);
+        std::string line;
+        if (input.is_open()) {
+            while (std::getline(input, line)) {
+                if (line.empty()) {
+                    output.push_back(func(elems));
+                    elems.clear();
+                } else {
+                    elems.push_back(line);
+                }
+            }
+        }
+        output.push_back(func(elems));
+        return output;
+    }
+
+    template <typename T>
     std::vector<T> parseInput(std::string inputName, void (*func)(std::string, std::vector<T>&), bool firstPart = true) {
         std::fstream input;
         input.open(inputName + ".txt", std::ios::in);
@@ -161,6 +183,16 @@ namespace aoc {
         std::string tmp;
         while(std::getline(ss, tmp, delimiter)) {
             output.push_back(std::stoll(tmp));
+        }
+        return output;
+    }
+
+    std::vector<std::string> splitvs(std::string line, char delimiter) {
+        std::vector<std::string> output;
+        std::stringstream ss(line);
+        std::string tmp;
+        while(std::getline(ss, tmp, delimiter)) {
+            output.push_back(tmp);
         }
         return output;
     }
