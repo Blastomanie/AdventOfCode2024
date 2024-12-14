@@ -5,6 +5,13 @@ add_subdirectory(lib)
 
 file(GLOB_RECURSE SOURCES "days/*/*.cpp")
 
+find_package(SDL2 REQUIRED)
+
+set(IMGUI_PATH "lib/imgui")
+file(GLOB IMGUI_SOURCES ${IMGUI_PATH}/*.cpp ${IMGUI_PATH}/backends/imgui_impl_sdl2.cpp ${IMGUI_PATH}/backends/imgui_impl_sdlrenderer2.cpp)
+add_library("ImGui" STATIC ${IMGUI_SOURCES})
+target_include_directories("ImGui" PUBLIC ${IMGUI_PATH})
+
 foreach(SOURCE_FILE ${SOURCES})
 
     get_filename_component(FILE_NAME ${SOURCE_FILE} NAME_WE)
@@ -13,7 +20,7 @@ foreach(SOURCE_FILE ${SOURCES})
     get_filename_component(DAY_NAME ${DAY_DIR} NAME)
 
     add_executable(${FILE_NAME} ${SOURCE_FILE})
-    target_link_libraries(${FILE_NAME} PRIVATE utils)
+    target_link_libraries(${FILE_NAME} PRIVATE utils ${SDL2_LIBRARIES} ImGui)
 
     file(GLOB_RECURSE TXT_FILES "days/${DAY_NAME}/*.txt")
 
