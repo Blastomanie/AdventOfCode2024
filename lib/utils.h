@@ -8,6 +8,7 @@
 #include <vector>
 #include <map>
 #include <chrono>
+#include <set>
 
 #ifndef NDEBUG
 #   define assert(condition, message) \
@@ -154,6 +155,28 @@ namespace aoc {
         return output;
     }
 
+    template <typename T1, typename T2>
+    std::pair<std::vector<T1>, std::vector<T2>> parseInput(std::string inputName, void (*func)(std::vector<std::string>, std::pair<std::vector<T1>, std::vector<T2>>&), int nline = 1) {
+        std::fstream input;
+        input.open(inputName + ".txt", std::ios::in);
+        std::pair<std::vector<T1>, std::vector<T2>> output;
+        std::vector<std::string> elems;
+        elems.reserve(nline);
+        std::string line;
+        if (input.is_open()) {
+            while (std::getline(input, line)) {
+                if (line.empty()) {
+                    func(elems, output);
+                    elems.clear();
+                } else {
+                    elems.push_back(line);
+                }
+            }
+        }
+        func(elems, output);
+        return output;
+    }
+
     template <typename T, typename... Args>
     void showResult(T (*part)(Args...), int num, Args... args) {
         auto start = std::chrono::high_resolution_clock::now();
@@ -173,6 +196,12 @@ namespace aoc {
 
     template <typename T, typename... Args>
     void checkTest(T (*part)(Args...), int64_t value, Args... args) {
+        T output = part(args...);
+        assert(output == value, "excepted " << value << " but get " << output);
+    }
+
+    template <typename T, typename... Args>
+    void checkTest(T (*part)(Args...), std::string value, Args... args) {
         T output = part(args...);
         assert(output == value, "excepted " << value << " but get " << output);
     }
@@ -243,6 +272,15 @@ namespace aoc {
             out += "\n";
         }
         std::cout << out;
+    }
+
+    std::string join(std::set<std::string> set, char c) {
+        std::string output = "";
+        for (std::string elem : set) {
+            output += elem + c;
+        }
+        output.erase(output.length() - 1);
+        return output;
     }
 
 }
